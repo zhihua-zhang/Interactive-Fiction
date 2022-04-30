@@ -1,0 +1,115 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'game/style/chat.css' %}">
+<style>
+    @font-face { font-family: ARCADE; src: url("{% static 'game/ARCADE.TTF' %}"); } 
+    input{
+        background-color: #101010;
+        color: #ffffff;
+        border: none;
+        outline: none;
+        font-family: ARCADE;
+        font-size: 30px;
+    }
+
+    body{
+        background-color: #101010;
+        color: #ffffff;
+        font-family: ARCADE;
+        font-size: 30px;
+    }
+
+    h1{
+        font-size: 70px;
+        margin: 30px 0px 10px 60px;
+    }
+
+    img{
+        max-width: 100%;
+        height: auto;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .column {
+        flex: 50%;
+        height:800px;
+        overflow-wrap: break-word;
+        /* overflow-y:auto; */
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .img_wrap {
+        position: relative;
+        height: 180px;
+        width: 180px;
+        padding-bottom: 50px;
+        display: inline-block;
+    }
+
+    .img_description_layer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(248, 0, 194, 0.6);
+        color: #fff;
+        visibility: hidden;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25;
+        height: 180px;
+        width: 180px;
+
+        /* transition effect. not necessary */
+        transition: opacity .2s, visibility .2s;
+    }
+
+    .img_wrap:hover .img_description_layer {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .img_description {
+        transition: .2s;
+        transform: translateY(1em);
+    }
+
+    .img_wrap:hover .img_description {
+        transform: translateY(0);
+    }
+</style>
+
+<body>
+    <h1> {{ location }} </h1>
+    <div class="row">
+        <div class="column">
+            <img src="{% static location_img %}" />
+            {% include 'chat.html' %}
+        </div>
+        <div class="column">
+            <p style="white-space: pre-wrap;">{{narration}}</p>
+            {% for item in items %}
+                {% if item.in_location %}
+                <div class="img_wrap">
+                    <img class="item-img" src="{% static item.image %}" title="{{item.name}}"/>
+                    <div class="img_description_layer">
+                        <p class="img_description"> {{ item.name }} </p>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            <form method="POST" action="">
+                {% csrf_token %}
+                > <input autofocus type="text" id="commandInput" name="command" style="width: 80%">
+                <input type="submit" style="display: none" />
+            </form>
+        </div>
+    </div>
+
+</body>
